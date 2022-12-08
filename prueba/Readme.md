@@ -1,2 +1,2 @@
 # Prestashop Test Module
-_A test Prestashop modules_
+_Test Prestashop modules_
