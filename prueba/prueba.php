@@ -239,7 +239,6 @@ class Prueba extends Module
     public function hookDisplayAdminAfterHeader()
     {
         /* Place your code here. */
-        echo "HOla------------------------>";
         $context = Context::getContext();
         $shops = Shop::getShops($active = true, $id_shop_group = null, $get_as_list_id = false);
         foreach ($shops as $shop){
