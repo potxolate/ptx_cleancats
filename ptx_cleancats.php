@@ -151,7 +151,7 @@ class Ptx_Cleancats extends Module
 
                 // Verificar si la categoría debe ser eliminada
                 if ($rcategory->id_parent != 0 && !$rcategory->is_root_category && empty($categoria['name'])) {
-                    
+
                     if ($rcategory->delete()) {
                         echo "Se ha borrado la categoría ->" . $rcategory->id_category . '<br />';
                     } else {
