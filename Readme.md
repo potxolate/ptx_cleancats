@@ -4,27 +4,26 @@
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 ![Version](https://img.shields.io/badge/Version-1.0.0-orange.svg)
 
-## Descripción
+## Description
 
-`ptx_cleancats` es un módulo de PrestaShop que permite la gestión y limpieza de categorías vacías. Este módulo facilita la identificación y eliminación de categorías que no contienen productos, optimizando así la estructura de tu tienda online.
+`ptx_cleancats` is a PrestaShop module that allows the management and cleaning of empty categories. This module facilitates the identification and deletion of categories that do not contain products, thereby optimizing your online store's structure.
 
-## Características
+## Features
 
-- **Detección de categorías vacías**: Identifica categorías que no tienen productos.
-- **Eliminación automática**: Elimina categorías vacías que no sean categorías raíz.
-- **Registro en archivo**: Guarda información de las categorías vacías en un archivo de texto.
-- **Interfaz amigable**: Usa Bootstrap para una interfaz moderna y amigable en el backend.
+- **Detection of empty categories**: Identifies categories that do not have products.
+- **Automatic deletion**: Deletes empty categories that are not root categories.
+- **Log to file**: Saves information about empty categories to a text file.
+- **User-friendly interface**: Uses Bootstrap for a modern and user-friendly backend interface.
 
-## Instalación
+## Installation
 
-### Requisitos
+### Requirements
 
 - PrestaShop 8.x
-- PHP 7.2 o superior
+- PHP 7.2 or higher
 
-### Pasos
+### Steps
 
-1. **Descargar el módulo**:
+1. **Download the module**:
    ```bash
-   git clone https://github.com/tuusuario/ptx_cleancats.git
-
+   git clone https://github.com/potxolate/ptx_cleancats.git
