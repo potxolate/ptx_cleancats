@@ -13,7 +13,7 @@ class EmptyCatsController extends ModuleAdminController {
     {
         parent::initContent();       
 
-        $filename = '../modules/prueba/empty_cats.txt';
+        $filename = '../modules/ptx_cleancats/empty_cats.txt';
         $message = '';
 
         if (file_exists($filename)) {
@@ -31,7 +31,7 @@ class EmptyCatsController extends ModuleAdminController {
             "filename" => $filename
         ));
        // $this->context->smarty->assign("filename", $filename);
-		$template_file = _PS_MODULE_DIR_. 'prueba/views/templates/admin/emptycats.tpl';
+		$template_file = _PS_MODULE_DIR_. 'ptx_cleancats/views/templates/admin/emptycats.tpl';
         $content = $this->context->smarty->fetch($template_file);
         $this->context->smarty->assign(array(
             'content' =>  $content,

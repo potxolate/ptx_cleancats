@@ -54,8 +54,6 @@ class Ptx_Cleancats extends Module
         $this->confirmUninstall = $this->l('');
 
         $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
-
-        
     }
 
     /**
@@ -81,19 +79,19 @@ class Ptx_Cleancats extends Module
         return parent::install() &&
             $this->registerHook('header') &&
             $this->registerHook('displayBackOfficeHeader') &&
-            $this->registerHook('displayAdminAfterHeader') ;  
+            $this->registerHook('displayAdminAfterHeader');
     }
 
     public function uninstall()
     {
         Configuration::deleteByName('PRUEBA_LIVE_MODE');
 
-       // include(dirname(__FILE__) . '/sql/uninstall.php');
+        // include(dirname(__FILE__) . '/sql/uninstall.php');
 
         return parent::uninstall();
     }
 
-   
+
     /**
      * Add the CSS & JavaScript files you want to be loaded in the BO.
      */
@@ -116,38 +114,58 @@ class Ptx_Cleancats extends Module
 
     public function hookDisplayAdminAfterHeader()
     {
-        /* Place your code here. */
+        // Obtener el contexto actual
         $context = Context::getContext();
-        $shops = Shop::getShops($active = true, $id_shop_group = null, $get_as_list_id = false);
-        foreach ($shops as $shop){
-            $id_shop = $shop['id_shop'];
+
+        // Obtener todas las tiendas activas
+        $shops = Shop::getShops(true);
+
+        // Abrir archivo una vez para escritura
+        $filePath = _PS_MODULE_DIR_ . $this->name . '/empty_cats.txt';
+        $file = fopen($filePath, 'a+');
+        if (!$file) {
+            error_log("No se pudo abrir el archivo: " . $filePath);
+            return;
+        }
+
+        // Recorrer cada tienda
+        foreach ($shops as $shop) {
+            $id_shop = (int)$shop['id_shop'];
+
+            // Construir la consulta
             $sql = new DbQuery();
-            $sql->select('id_category, name');
-            $sql->from('category_lang');
-            $sql->where('id_shop =' . $id_shop . ' AND  id_category NOT IN (SELECT id_category FROM ps_category_product)');
-            $sql->orderBy('id_category');
-            $categorias =  Db::getInstance()->executeS($sql);
-            echo dump($categorias);
+            $sql->select('id_category, name')
+                ->from('category_lang')
+                ->where('id_shop = ' . $id_shop . ' AND id_category NOT IN (SELECT id_category FROM ' . _DB_PREFIX_ . 'category_product)')
+                ->orderBy('id_category');
+
+            // Ejecutar la consulta
+            $categorias = Db::getInstance()->executeS($sql);
+            if (!$categorias) {
+                continue;
+            }
+
+            // Procesar las categorías obtenidas
             foreach ($categorias as $categoria) {
                 $rcategory = new Category((int)$categoria['id_category'], $context->language->id);
-                if ($rcategory->id_parent != 0 && !$rcategory->is_root_category && $categoria['name']==='') {
-                    $rcategory->delete();
-                    echo "Se ha borrado la categoria ->".$rcategory->id_category.'<br />';
-                }
-                else{
-                    $file = fopen(_PS_MODULE_DIR_.$this->name.'/empty_cats.txt', 'a+');           
-                    fwrite($file, $rcategory->id_category.",".$rcategory->name."\r\n");
-                    fclose($file);
-                    echo "Se ha escrito".$file;
+
+                // Verificar si la categoría debe ser eliminada
+                if ($rcategory->id_parent != 0 && !$rcategory->is_root_category && empty($categoria['name'])) {
+                    
+                    if ($rcategory->delete()) {
+                        echo "Se ha borrado la categoría ->" . $rcategory->id_category . '<br />';
+                    } else {
+                        error_log("No se pudo borrar la categoría: " . $rcategory->id_category);
+                    }
+                } else {
+                    // Escribir la categoría en el archivo
+                    fwrite($file, $rcategory->id_category . "," . $rcategory->name . "\r\n");
+                    echo "Se ha escrito la categoría en el archivo<br />";
                 }
             }
         }
 
-
-        
-        
-
-        
-        
+        // Cerrar el archivo
+        fclose($file);
     }
 }
